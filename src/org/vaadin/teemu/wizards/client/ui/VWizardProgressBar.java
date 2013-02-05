@@ -126,6 +126,7 @@ public class VWizardProgressBar extends FlowPanel implements
             if (captions.getWidgetCount() > i) {
                 // get the existing widget for updating
                 item = (ProgressBarItem) captions.getWidget(i);
+                item.setStepId(stepId);
             } else {
                 // create new widget and add it to the layout
                 item = new ProgressBarItem(i + 1, stepId,
@@ -228,6 +229,7 @@ public class VWizardProgressBar extends FlowPanel implements
     private static class ProgressBarItem extends Widget {
 
         private final int index;
+        private String stepId;
         private Element captionElement;
         private boolean asLink;
 
@@ -237,6 +239,7 @@ public class VWizardProgressBar extends FlowPanel implements
             setElement(root);
             setStyleName("step");
             this.index = index;
+            this.stepId = stepId;
             captionElement = Document.get().createDivElement();
             root.appendChild(captionElement);
 
@@ -246,13 +249,17 @@ public class VWizardProgressBar extends FlowPanel implements
                 public void onClick(ClickEvent event) {
 
                     if (asLink) {
-                        handler.onProgressBarItemClicked(stepId);
+                        handler.onProgressBarItemClicked(ProgressBarItem.this.stepId);
                     } else {
                         System.out.println("Clicked, but not as a link");
                     }
 
                 }
             }, ClickEvent.getType());
+        }
+
+        public void setStepId(String stepId) {
+            this.stepId = stepId;
         }
 
         public void setCaption(String caption) {
