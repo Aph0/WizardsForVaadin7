@@ -664,10 +664,11 @@ public class Wizard extends CustomComponent implements
      * method is called when user clicks the finish button.
      */
     public void finish() {
-        if (isLastStep(currentStep) && currentStep.onAdvance()) {
-            // next (finish) allowed -> fire complete event
-            fireEvent(new WizardCompletedEvent(this));
-
+        if (isLastStep(currentStep)) {
+            if (currentStep.onAdvance()) {
+                // next (finish) allowed -> fire complete event
+                fireEvent(new WizardCompletedEvent(this));
+            }
         } else if (currentLinkmode == LinkMode.ALL) {
             // having LinkMode.ALL enabled, one can press finish button
             // right from start
@@ -680,7 +681,7 @@ public class Wizard extends CustomComponent implements
                 tryToActivateStep(getId(lastStep));
             }
 
-            if (currentStep == lastStep) {
+            if (currentStep == lastStep && currentStep.onAdvance()) {
                 fireEvent(new WizardCompletedEvent(this));
             }
         }
